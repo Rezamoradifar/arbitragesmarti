@@ -1,3 +1,8 @@
+# Foundry
+cache/
+out/
+broadcast/*/*/dry-run/
+
 # Logs
 logs
 *.log
