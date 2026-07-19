@@ -45,8 +45,12 @@ npm run dev
   (chain 97) — see `contracts/deployments/bscTestnet.json` for addresses;
   `BackgammonCore` is `0x707fA8673EA320F284F3B81448367e4c0509F64A`.
   Ownership of all four contracts is transferred to the platform
-  treasury. Still **not audited** — get a professional audit before any
-  mainnet deployment or real-money wagering.
+  treasury. All four contracts are **verified on BscScan** (mainnet and
+  testnet — source matches on-chain bytecode, see
+  `contracts/deployments/*.json` for links). Still **not audited** — get a
+  professional audit before any mainnet deployment or real-money
+  wagering (verification just proves the published source is what's
+  running; it says nothing about correctness/safety).
 - Frontend: React + Vite app builds cleanly (`npm run build`), is wired
   to the deployed testnet `BackgammonCore` address by default, and the
   wallet-not-connected landing screen renders correctly (verified in a

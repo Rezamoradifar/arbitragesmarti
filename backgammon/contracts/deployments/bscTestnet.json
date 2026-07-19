@@ -9,5 +9,12 @@
     "RatingRegistry": "0xF07fe39C8532e3b714cfDFFCee28bcC9603F7092",
     "BackgammonTournament": "0x5C30ec862741f6977E22cFa7Fd368Cd95CF63a40"
   },
+  "verified": true,
+  "bscscanLinks": {
+    "ReferralRegistry": "https://testnet.bscscan.com/address/0xE78cf59B7C015985992550B5a8Cb67940a0bEB11#code",
+    "BackgammonCore": "https://testnet.bscscan.com/address/0x707fA8673EA320F284F3B81448367e4c0509F64A#code",
+    "RatingRegistry": "https://testnet.bscscan.com/address/0xF07fe39C8532e3b714cfDFFCee28bcC9603F7092#code",
+    "BackgammonTournament": "https://testnet.bscscan.com/address/0x5C30ec862741f6977E22cFa7Fd368Cd95CF63a40#code"
+  },
   "notes": "Deployed and wired via deploy/deploy.js (referral registry authorized caller, rating registry reporter, ownership transferred to platformOwner). Not audited. Testnet only."
 }
