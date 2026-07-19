@@ -1,7 +1,7 @@
-# Backgammon dApp — BSC Edition
+# ChainGammon Contracts — BSC Edition
 
-Clone of Backgammon Galaxy's feature set, split honestly between what can
-live on-chain and what must stay off-chain.
+An on-chain backgammon platform's feature set, split honestly between
+what can live on-chain and what must stay off-chain.
 
 ## Contracts (this folder)
 
