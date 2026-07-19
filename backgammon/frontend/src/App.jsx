@@ -11,6 +11,7 @@ import Leaderboard from "./components/Leaderboard";
 import HowToPlay from "./components/HowToPlay";
 import SettingsToggle from "./components/SettingsToggle";
 import FullscreenToggle from "./components/FullscreenToggle";
+import { DiceIcon } from "./components/icons";
 
 export default function App() {
   const { isConnected } = useAccount();
@@ -24,9 +25,14 @@ export default function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <div>
-          <div className="eyebrow">On-chain · BNB Smart Chain</div>
-          <h1 style={{ fontSize: "1.6rem", marginTop: "0.3rem" }}>ChainGammon</h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+          <span className="brand-mark">
+            <DiceIcon width={19} height={19} />
+          </span>
+          <div>
+            <div className="eyebrow">On-chain · BNB Smart Chain</div>
+            <h1 style={{ fontSize: "1.6rem", marginTop: "0.2rem" }}>ChainGammon</h1>
+          </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
           <SettingsToggle />

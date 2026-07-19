@@ -77,6 +77,54 @@ button:hover { transform: translateY(-1px); }
   border-radius: 4px;
 }
 
+.panel-interactive {
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.panel-interactive:hover {
+  border-color: var(--brass);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+  transform: translateY(-1px);
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(155deg, var(--brass) 0%, var(--oxblood) 130%);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.nav-icon { display: inline-flex; vertical-align: -4px; margin-right: 0.4rem; opacity: 0.85; }
+
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(176, 141, 87, 0.14);
+  color: var(--brass-bright);
+  margin-bottom: 0.8rem;
+}
+
+.bg-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--brass-bright);
+  animation: bg-spin 700ms linear infinite;
+  flex-shrink: 0;
+}
+@keyframes bg-spin {
+  to { transform: rotate(360deg); }
+}
+
 .mono { font-family: var(--mono); }
 
 @media (prefers-reduced-motion: reduce) {

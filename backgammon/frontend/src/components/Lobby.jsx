@@ -3,6 +3,7 @@ import { useAccount, useChainId, usePublicClient, useWriteContract } from "wagmi
 import { formatEther, parseEther, parseEventLogs } from "viem";
 import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, BACKGAMMON_CORE_DEPLOY_BLOCK } from "../contracts/backgammonCore";
 import { getLogsSafe } from "../contracts/getLogsSafe";
+import Spinner from "./Spinner";
 
 // BackgammonCore has not had a professional Solidity audit yet (see
 // backgammon/README.md). Keep real-money wagering off on mainnet until
@@ -212,7 +213,7 @@ export default function Lobby({ onEnterGame }) {
           </p>
         )}
         {tablesError && <p style={{ color: "var(--oxblood-bright)" }}>{tablesError}</p>}
-        {!tablesError && openTables === null && <p style={{ color: "var(--ivory-dim)" }}>Loading open tables…</p>}
+        {!tablesError && openTables === null && <Spinner label="Loading open tables…" />}
         {!tablesError && openTables && openTables.length === 0 && (
           <p style={{ color: "var(--ivory-dim)" }}>No open tables right now — create one above.</p>
         )}
@@ -221,7 +222,7 @@ export default function Lobby({ onEnterGame }) {
           {openTables?.map((t) => (
             <div
               key={t.gameId.toString()}
-              className="panel"
+              className="panel panel-interactive"
               style={{ padding: "0.8rem 1rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}
             >
               <div className="mono" style={{ fontSize: "0.85rem" }}>
