@@ -51,9 +51,9 @@ export default function App() {
         </div>
       )}
 
-      {tab === "play" && isConnected && !activeGameId && <Lobby onEnterGame={setActiveGameId} />}
+      {tab === "play" && isConnected && activeGameId === null && <Lobby onEnterGame={setActiveGameId} />}
 
-      {tab === "play" && isConnected && activeGameId && (
+      {tab === "play" && isConnected && activeGameId !== null && (
         <div className="game-view">
           <button className="btn-ghost" style={{ marginBottom: "1rem" }} onClick={() => setActiveGameId(null)}>
             ← Back to lobby

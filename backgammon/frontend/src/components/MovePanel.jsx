@@ -14,6 +14,7 @@ export default function MovePanel({ gameId, isMyTurn }) {
   const [queued, setQueued] = useState([]);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [error, setError] = useState(null);
 
   const { data: dice } = useReadContract({
     address,
@@ -37,13 +38,18 @@ export default function MovePanel({ gameId, isMyTurn }) {
   }
 
   async function handleSubmit() {
-    await writeContractAsync({
-      address,
-      abi: BACKGAMMON_CORE_ABI,
-      functionName: "submitMoves",
-      args: [gameId, queued],
-    });
-    setQueued([]);
+    setError(null);
+    try {
+      await writeContractAsync({
+        address,
+        abi: BACKGAMMON_CORE_ABI,
+        functionName: "submitMoves",
+        args: [gameId, queued],
+      });
+      setQueued([]);
+    } catch (e) {
+      setError(e.shortMessage || e.message || "Failed to submit moves");
+    }
   }
 
   if (!isMyTurn) {
@@ -118,6 +124,7 @@ export default function MovePanel({ gameId, isMyTurn }) {
       <button className="btn-primary" disabled={isPending || queued.length === 0} onClick={handleSubmit}>
         {isPending ? "Confirm in wallet…" : `Submit ${queued.length} move${queued.length === 1 ? "" : "s"}`}
       </button>
+      {error && <p style={{ color: "var(--oxblood-bright)", marginTop: "0.8rem" }}>{error}</p>}
     </div>
   );
 }

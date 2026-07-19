@@ -21,40 +21,53 @@ export default function DiceRoll({ gameId, phase }) {
   const contractAddress = BACKGAMMON_CORE_ADDRESS[chainId];
   const { writeContractAsync, isPending } = useWriteContract();
   const [hasCommitted, setHasCommitted] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setHasCommitted(!!localStorage.getItem(secretKey(gameId, address)));
   }, [gameId, address, phase]);
 
   async function handleCommit() {
+    setError(null);
     const { secretValue, salt } = randomSecret();
-    localStorage.setItem(secretKey(gameId, address), JSON.stringify({ secretValue, salt }));
-
     const commitHash = keccak256(
       encodePacked(["uint8", "bytes32", "address"], [secretValue, salt, address])
     );
 
-    await writeContractAsync({
-      address: contractAddress,
-      abi: BACKGAMMON_CORE_ABI,
-      functionName: "commitRoll",
-      args: [gameId, commitHash],
-    });
-    setHasCommitted(true);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: BACKGAMMON_CORE_ABI,
+        functionName: "commitRoll",
+        args: [gameId, commitHash],
+      });
+      // Only persist the secret once the commit transaction actually lands --
+      // saving it earlier (then failing/rejecting the tx) would strand the
+      // button in a permanent "Committed" state with nothing on-chain.
+      localStorage.setItem(secretKey(gameId, address), JSON.stringify({ secretValue, salt }));
+      setHasCommitted(true);
+    } catch (e) {
+      setError(e.shortMessage || e.message || "Failed to commit roll");
+    }
   }
 
   async function handleReveal() {
+    setError(null);
     const raw = localStorage.getItem(secretKey(gameId, address));
     if (!raw) return;
     const { secretValue, salt } = JSON.parse(raw);
 
-    await writeContractAsync({
-      address: contractAddress,
-      abi: BACKGAMMON_CORE_ABI,
-      functionName: "revealRoll",
-      args: [gameId, secretValue, salt],
-    });
-    localStorage.removeItem(secretKey(gameId, address));
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: BACKGAMMON_CORE_ABI,
+        functionName: "revealRoll",
+        args: [gameId, secretValue, salt],
+      });
+      localStorage.removeItem(secretKey(gameId, address));
+    } catch (e) {
+      setError(e.shortMessage || e.message || "Failed to reveal roll");
+    }
   }
 
   if (phase === "CommitRoll") {
@@ -69,6 +82,7 @@ export default function DiceRoll({ gameId, phase }) {
         <button className="btn-primary" disabled={isPending || hasCommitted} onClick={handleCommit}>
           {hasCommitted ? "Committed — waiting for opponent" : isPending ? "Confirm in wallet…" : "Commit Roll"}
         </button>
+        {error && <p style={{ color: "var(--oxblood-bright)", marginTop: "0.8rem" }}>{error}</p>}
       </div>
     );
   }
@@ -83,6 +97,7 @@ export default function DiceRoll({ gameId, phase }) {
         <button className="btn-primary" disabled={isPending} onClick={handleReveal}>
           {isPending ? "Confirm in wallet…" : "Reveal Roll"}
         </button>
+        {error && <p style={{ color: "var(--oxblood-bright)", marginTop: "0.8rem" }}>{error}</p>}
       </div>
     );
   }
