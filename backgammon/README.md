@@ -37,14 +37,21 @@ npm run dev
   referral commissions, rating updates, and tournament entry/finalize/claim
   — all 9 tests pass. `BackgammonCore` now calls
   `RatingRegistry.reportResult()` on every finished game (this wiring was
-  a listed TODO and has been completed). **Still not deployed to any
-  network or professionally audited** — get an audit before enabling
-  real-money wagering on mainnet.
-- Frontend: React + Vite app builds cleanly (`npm run build`) and the
+  a listed TODO and has been completed). **Deployed to BSC Testnet**
+  (chain 97) — see `contracts/deployments/bscTestnet.json` for addresses;
+  `BackgammonCore` is `0x707fA8673EA320F284F3B81448367e4c0509F64A`.
+  Ownership of all four contracts is transferred to the platform
+  treasury. Still **not audited** — get a professional audit before any
+  mainnet deployment or real-money wagering.
+- Frontend: React + Vite app builds cleanly (`npm run build`), is wired
+  to the deployed testnet `BackgammonCore` address by default, and the
   wallet-not-connected landing screen renders correctly (verified in a
-  headless browser). The wallet-connected flow (lobby, board, live game)
-  has not been exercised end-to-end against a deployed contract yet —
-  do that after a testnet deployment.
+  headless browser). Auto-deploys to GitHub Pages on push via
+  `.github/workflows/deploy-backgammon-frontend.yml` (requires Pages
+  enabled once in repo Settings). The wallet-connected flow (lobby,
+  board, live game) still needs a manual pass with a real wallet
+  (MetaMask on BSC Testnet) — that requires a browser extension a
+  headless run can't provide.
 - Off-chain by design (not in this project): AI opponent, lessons/blog
   content, deep move analysis, lobby indexing/chat. See
   `contracts/README.md` for the full on-chain vs. off-chain breakdown.

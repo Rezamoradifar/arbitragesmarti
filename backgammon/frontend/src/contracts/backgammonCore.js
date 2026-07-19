@@ -1,6 +1,7 @@
 // Fill in after you deploy BackgammonCore.sol (see /contracts in the project root).
 export const BACKGAMMON_CORE_ADDRESS = {
-  97: import.meta.env.VITE_CORE_ADDRESS_TESTNET || "0x0000000000000000000000000000000000000000",
+  // Deployed 2026-07-19 via deploy/deploy.js on BSC Testnet (chain 97).
+  97: import.meta.env.VITE_CORE_ADDRESS_TESTNET || "0x707fA8673EA320F284F3B81448367e4c0509F64A",
   56: import.meta.env.VITE_CORE_ADDRESS_MAINNET || "0x0000000000000000000000000000000000000000",
 };
 
