@@ -3,17 +3,23 @@ import { useChainId, useWriteContract } from "wagmi";
 import { parseEther } from "viem";
 import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCore";
 
+// BackgammonCore has not had a professional Solidity audit yet (see
+// backgammon/README.md). Keep real-money wagering off on mainnet until
+// that's done -- testnet wagering is fine since tBNB has no value.
+const MAINNET_WAGERING_ENABLED = false;
+
 export default function Lobby({ onEnterGame }) {
   const chainId = useChainId();
   const address = BACKGAMMON_CORE_ADDRESS[chainId];
   const { writeContractAsync, isPending } = useWriteContract();
 
+  const wagerAllowed = MAINNET_WAGERING_ENABLED || chainId !== 56;
   const [mode, setMode] = useState("free"); // "free" | "wager"
   const [stake, setStake] = useState("0.05");
   const [joinId, setJoinId] = useState("");
 
   async function handleCreate() {
-    const wagerAmount = mode === "wager" ? parseEther(stake) : 0n;
+    const wagerAmount = mode === "wager" && wagerAllowed ? parseEther(stake) : 0n;
     const hash = await writeContractAsync({
       address,
       abi: BACKGAMMON_CORE_ABI,
@@ -53,12 +59,22 @@ export default function Lobby({ onEnterGame }) {
           <button
             className={mode === "wager" ? "btn-primary" : "btn-ghost"}
             onClick={() => setMode("wager")}
+            disabled={!wagerAllowed}
+            title={wagerAllowed ? undefined : "Wagering is disabled on mainnet until BackgammonCore has a professional audit"}
           >
             Wager BNB
           </button>
         </div>
 
-        {mode === "wager" && (
+        {!wagerAllowed && (
+          <p style={{ color: "var(--ivory-dim)", fontSize: "0.8rem", marginBottom: "1rem" }}>
+            Real-money wagering is disabled on mainnet until BackgammonCore
+            has a professional audit. Switch to BSC Testnet to try wagered
+            games with tBNB.
+          </p>
+        )}
+
+        {mode === "wager" && wagerAllowed && (
           <label style={{ display: "block", marginBottom: "1rem" }}>
             <span className="mono" style={{ fontSize: "0.8rem", color: "var(--ivory-dim)" }}>
               Stake per player (BNB)

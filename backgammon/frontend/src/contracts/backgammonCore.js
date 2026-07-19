@@ -2,7 +2,10 @@
 export const BACKGAMMON_CORE_ADDRESS = {
   // Deployed 2026-07-19 via deploy/deploy.js on BSC Testnet (chain 97).
   97: import.meta.env.VITE_CORE_ADDRESS_TESTNET || "0x707fA8673EA320F284F3B81448367e4c0509F64A",
-  56: import.meta.env.VITE_CORE_ADDRESS_MAINNET || "0x0000000000000000000000000000000000000000",
+  // Deployed 2026-07-19 via deploy/deploy.js on BSC Mainnet (chain 56).
+  // NOT audited. wagerAmount is 0 (free play) until a professional audit
+  // completes -- see backgammon/README.md.
+  56: import.meta.env.VITE_CORE_ADDRESS_MAINNET || "0x707fA8673EA320F284F3B81448367e4c0509F64A",
 };
 
 // Trimmed ABI: only what the frontend calls/reads/listens to.
