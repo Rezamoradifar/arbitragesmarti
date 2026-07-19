@@ -102,9 +102,13 @@ Dependencies: OpenZeppelin Contracts (`IERC20`, `ReentrancyGuard`, `Ownable`).
    address (set via `setRatingRegistry`, wired automatically in
    `deploy/deploy.js`) and calls `reportResult()` in `_finishGame`,
    best-effort (a misconfigured registry never blocks payout).
-3. Deploy to BSC testnet (`npx hardhat run deploy/deploy.js --network
-   bscTestnet` with `DEPLOYER_PRIVATE_KEY` set in `.env`) and run one full
-   game from the frontend before considering mainnet.
-4. Build the bot wallet service for AI opponents.
-5. Get a professional audit before enabling real-money wagering on
+3. ~~Deploy to BSC testnet~~ — done: also deployed to BSC mainnet (see
+   `deployments/bscTestnet.json` / `deployments/bscMainnet.json`).
+4. ~~Verify on BscScan~~ — done: `npx hardhat verify --network <bscTestnet|bscMainnet> <address> [constructorArgs...]`
+   (needs `BSCSCAN_API_KEY` in `.env`, a free key from
+   https://bscscan.com/myapikey — the Etherscan V2 unified API key works
+   across all supported chains). All four contracts verified on both
+   networks; links in the `deployments/*.json` files.
+5. Build the bot wallet service for AI opponents.
+6. Get a professional audit before enabling real-money wagering on
    mainnet.

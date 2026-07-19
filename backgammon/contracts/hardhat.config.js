@@ -31,9 +31,14 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: {
-      bscTestnet: process.env.BSCSCAN_API_KEY || "",
-      bsc: process.env.BSCSCAN_API_KEY || "",
-    },
+    // Etherscan API V2: a single key works across all supported chains
+    // (BscScan merged into the unified Etherscan multichain API).
+    apiKey: process.env.BSCSCAN_API_KEY || "",
+  },
+  sourcify: {
+    // Disabled: this plugin version only speaks Sourcify's old v1 API,
+    // which is in a deprecation "brownout" until 2027. BscScan/Etherscan
+    // verification below works fine on its own.
+    enabled: false,
   },
 };
