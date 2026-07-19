@@ -16,7 +16,11 @@ export const config = createConfig({
       : []),
   ],
   transports: {
-    [bscTestnet.id]: http(),
-    [bsc.id]: http(),
+    // Explicit RPC URLs -- viem's chain defaults (data-seed-*.bnbchain.org,
+    // thirdweb) reset/reject connections from a lot of datacenter and cloud
+    // IPs, which silently breaks reads for a chunk of real users too, not
+    // just CI. publicnode is reliable for both chains.
+    [bscTestnet.id]: http(import.meta.env.VITE_TESTNET_RPC_URL || "https://bsc-testnet-rpc.publicnode.com"),
+    [bsc.id]: http(import.meta.env.VITE_MAINNET_RPC_URL || "https://bsc-rpc.publicnode.com"),
   },
 });

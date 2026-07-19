@@ -1,14 +1,18 @@
-# Backgammon dApp (BSC) — Full Project
+# ChainGammon (BSC) — Full Project
 
-On-chain Backgammon Galaxy-style platform for BNB Smart Chain.
+On-chain backgammon platform for BNB Smart Chain, with its own
+original branding/design (UX structure takes general inspiration from
+established backgammon platforms, but nothing here reuses another
+site's name, logo, copy, or visual assets).
 
 ## Structure
 
 - `contracts/` — Solidity smart contracts (game engine, tournament, rating,
   referral) + Hardhat deploy script. See `contracts/README.md`.
-- `frontend/` — React + wagmi/viem web app (wallet connect, lobby, board,
-  dice/move flow, timer, sound/vibration, responsive/fullscreen). See
-  `frontend/README.md`.
+- `frontend/` — React + wagmi/viem web app: a marketing home page, wallet
+  connect, lobby, board, dice/move flow, timer, tournaments, an on-chain
+  leaderboard, a how-to-play page, sound/vibration, responsive/fullscreen.
+  See `frontend/README.md`.
 
 ## Quick start
 

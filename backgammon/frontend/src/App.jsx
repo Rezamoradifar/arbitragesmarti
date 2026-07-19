@@ -1,22 +1,32 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import WalletConnect from "./components/WalletConnect";
+import NavBar from "./components/NavBar";
+import Landing from "./components/Landing";
 import Lobby from "./components/Lobby";
 import Board from "./components/Board";
 import GameStatus from "./components/GameStatus";
+import Tournaments from "./components/Tournaments";
+import Leaderboard from "./components/Leaderboard";
+import HowToPlay from "./components/HowToPlay";
 import SettingsToggle from "./components/SettingsToggle";
 import FullscreenToggle from "./components/FullscreenToggle";
 
 export default function App() {
   const { isConnected } = useAccount();
+  const [tab, setTab] = useState("home");
   const [activeGameId, setActiveGameId] = useState(null);
+
+  function goToPlay() {
+    setTab("play");
+  }
 
   return (
     <div className="app-container">
       <header className="app-header">
         <div>
           <div className="eyebrow">On-chain · BNB Smart Chain</div>
-          <h1 style={{ fontSize: "1.9rem", marginTop: "0.3rem" }}>Galaxy Points</h1>
+          <h1 style={{ fontSize: "1.6rem", marginTop: "0.3rem" }}>ChainGammon</h1>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
           <SettingsToggle />
@@ -25,7 +35,13 @@ export default function App() {
         </div>
       </header>
 
-      {!isConnected && (
+      <div style={{ marginBottom: "1.6rem" }}>
+        <NavBar active={tab} onChange={setTab} />
+      </div>
+
+      {tab === "home" && <Landing isConnected={isConnected} onPlay={goToPlay} />}
+
+      {tab === "play" && !isConnected && (
         <div className="panel" style={{ padding: "3rem", textAlign: "center" }}>
           <h2 style={{ fontSize: "1.3rem", marginBottom: "0.6rem" }}>Connect a wallet to play</h2>
           <p style={{ color: "var(--ivory-dim)", maxWidth: 440, margin: "0 auto" }}>
@@ -35,9 +51,9 @@ export default function App() {
         </div>
       )}
 
-      {isConnected && !activeGameId && <Lobby onEnterGame={setActiveGameId} />}
+      {tab === "play" && isConnected && !activeGameId && <Lobby onEnterGame={setActiveGameId} />}
 
-      {isConnected && activeGameId && (
+      {tab === "play" && isConnected && activeGameId && (
         <div className="game-view">
           <button className="btn-ghost" style={{ marginBottom: "1rem" }} onClick={() => setActiveGameId(null)}>
             ← Back to lobby
@@ -46,6 +62,10 @@ export default function App() {
           <GameStatus gameId={activeGameId} />
         </div>
       )}
+
+      {tab === "tournaments" && <Tournaments />}
+      {tab === "leaderboard" && <Leaderboard />}
+      {tab === "how-to-play" && <HowToPlay />}
     </div>
   );
 }
