@@ -3,6 +3,10 @@ cache/
 out/
 broadcast/*/*/dry-run/
 
+# Hardhat
+artifacts/
+typechain-types/
+
 # Logs
 logs
 *.log

@@ -1,0 +1,138 @@
+:root {
+  --ink: #14110f;         /* walnut-black background */
+  --ink-panel: #201a15;   /* card / panel surface */
+  --felt: #1f3a2e;        /* board felt green */
+  --felt-dark: #16281f;
+  --ivory: #ede6d6;       /* primary text / point highlight */
+  --ivory-dim: #b8afa0;
+  --oxblood: #7a2e2e;     /* player A / accent */
+  --oxblood-bright: #a53d3d;
+  --brass: #b08d57;       /* stakes / CTA */
+  --brass-bright: #d1ad74;
+  --line: rgba(237, 230, 214, 0.12);
+
+  --display: "Fraunces", serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--ink);
+  color: var(--ivory);
+  font-family: var(--body);
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top, rgba(122, 46, 46, 0.08), transparent 55%),
+    radial-gradient(ellipse at bottom, rgba(31, 58, 46, 0.15), transparent 60%);
+}
+
+h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; letter-spacing: 0.01em; }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+}
+
+button {
+  font-family: var(--body);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+button:focus-visible { outline: 2px solid var(--brass-bright); outline-offset: 2px; }
+button:hover { transform: translateY(-1px); }
+
+.btn-primary {
+  background: var(--brass);
+  color: var(--ink);
+  border-color: var(--brass);
+  padding: 0.7rem 1.4rem;
+  font-size: 0.95rem;
+}
+.btn-primary:hover { background: var(--brass-bright); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ivory);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+}
+.btn-ghost:hover { border-color: var(--brass); color: var(--brass-bright); }
+
+.panel {
+  background: var(--ink-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.mono { font-family: var(--mono); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* --- Layout / responsiveness --- */
+
+.app-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  min-height: 100vh;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.game-view { width: 100%; }
+
+/* Fullscreen: reclaim all viewport space, board becomes the focus */
+:fullscreen .app-container,
+:-webkit-full-screen .app-container {
+  max-width: 100%;
+  padding: 1rem;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Tablets and small desktops */
+@media (max-width: 860px) {
+  .app-container { padding: 1.5rem 1rem; }
+  .app-header h1 { font-size: 1.5rem; }
+}
+
+/* Phones, portrait: stack everything, shrink board panel padding */
+@media (max-width: 600px) and (orientation: portrait) {
+  .app-container { padding: 1rem 0.75rem; }
+  .app-header { gap: 0.6rem; }
+  .app-header h1 { font-size: 1.25rem; }
+  .status-row, .lobby-grid {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+  }
+}
+
+/* Phones, landscape: board needs width, header can shrink further */
+@media (max-height: 480px) and (orientation: landscape) {
+  .app-container { padding: 0.6rem 0.75rem; }
+  .app-header { margin-bottom: 0.8rem; }
+  .app-header h1 { font-size: 1.1rem; }
+  .eyebrow { display: none; } /* reclaim vertical space in short landscape viewports */
+}
