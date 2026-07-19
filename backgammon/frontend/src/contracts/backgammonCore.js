@@ -8,6 +8,13 @@ export const BACKGAMMON_CORE_ADDRESS = {
   56: import.meta.env.VITE_CORE_ADDRESS_MAINNET || "0x707fA8673EA320F284F3B81448367e4c0509F64A",
 };
 
+// Block BackgammonCore was deployed at (conservative lower bound) -- keeps
+// getLogs() scans for the open-tables list from having to walk the whole chain.
+export const BACKGAMMON_CORE_DEPLOY_BLOCK = {
+  97: 120003833n,
+  56: 110860908n,
+};
+
 // Trimmed ABI: only what the frontend calls/reads/listens to.
 // Regenerate the full ABI from your Hardhat/Foundry build artifacts once compiled.
 export const BACKGAMMON_CORE_ABI = [
@@ -130,6 +137,14 @@ export const BACKGAMMON_CORE_ABI = [
       { name: "creator", type: "address", indexed: true },
       { name: "wager", type: "uint256", indexed: false },
       { name: "token", type: "address", indexed: false },
+    ],
+  },
+  {
+    type: "event",
+    name: "GameJoined",
+    inputs: [
+      { name: "gameId", type: "uint256", indexed: true },
+      { name: "opponent", type: "address", indexed: true },
     ],
   },
   {

@@ -9,18 +9,14 @@ const POINT_W = (W - BAR_W) / 12;
 const TRI_H = 210;
 const CHECKER_R = 17;
 
-// Point layout: bottom row = points 0..11 (left -> right), top row = points 12..23 (right -> left),
-// mirroring standard board orientation. Verify this against your contract's point-numbering
-// convention (see BackgammonCore.sol _initBoard) before shipping — this is a visual mapping only.
+// Point layout: bottom row = points 0..11 (left -> right), top row = points
+// 12..23 (left -> right, directly above 0..11), mirroring
+// BackgammonCore._initBoard()'s numbering. slot = i % 12 gives the column
+// (0..11); offset shifts columns 6..11 one slot right to leave a gap for
+// the bar in the middle.
 function pointX(i) {
-  const half = i < 6 || (i >= 12 && i < 18) ? 0 : 1;
-  const col = i < 12 ? i % 6 : 11 - (i % 6) - (i >= 18 ? 0 : 0);
-  const localCol = i < 12 ? i % 6 : i % 6;
-  const side = i < 6 || (i >= 18 && i < 24) ? "right" : "left";
-  const base = i < 12 ? (i < 6 ? i : i) : (i < 18 ? i - 12 : i - 12);
   const slot = i % 12;
-  const x = slot < 6 ? slot : slot; // 0..11 across, bar splits after col 5
-  const offset = x < 6 ? x : x + 1; // shift right half past the bar
+  const offset = slot < 6 ? slot : slot + 1;
   return offset * POINT_W;
 }
 

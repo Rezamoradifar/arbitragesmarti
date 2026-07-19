@@ -18,6 +18,7 @@ export default function Timer({ gameId, phase }) {
   });
 
   const [remaining, setRemaining] = useState(null);
+  const [error, setError] = useState(null);
   const lowFired = useRef(false);
   const expiredFired = useRef(false);
 
@@ -54,12 +55,17 @@ export default function Timer({ gameId, phase }) {
   const urgent = remaining.left <= 15;
 
   async function handleClaimTimeout() {
-    await writeContractAsync({
-      address,
-      abi: BACKGAMMON_CORE_ABI,
-      functionName: "claimTimeout",
-      args: [gameId],
-    });
+    setError(null);
+    try {
+      await writeContractAsync({
+        address,
+        abi: BACKGAMMON_CORE_ABI,
+        functionName: "claimTimeout",
+        args: [gameId],
+      });
+    } catch (e) {
+      setError(e.shortMessage || e.message || "Failed to claim timeout");
+    }
   }
 
   return (
@@ -90,6 +96,7 @@ export default function Timer({ gameId, phase }) {
           {isPending ? "Confirm in wallet…" : "Claim win — opponent timed out"}
         </button>
       )}
+      {error && <p style={{ color: "var(--oxblood-bright)", marginTop: "0.8rem" }}>{error}</p>}
     </div>
   );
 }
