@@ -1,0 +1,19 @@
+{
+  "name": "backgammon-dapp-contracts",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run deploy/deploy.js --network bscTestnet",
+    "deploy:mainnet": "hardhat run deploy/deploy.js --network bscMainnet"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "dotenv": "^16.4.5"
+  }
+}
