@@ -16,7 +16,7 @@ import { DiceIcon } from "./components/icons";
 export default function App() {
   const { isConnected } = useAccount();
   const [tab, setTab] = useState("home");
-  const [activeGameId, setActiveGameId] = useState(null);
+  const [activeGame, setActiveGame] = useState(null); // { id, wagerAmount } | null
 
   function goToPlay() {
     setTab("play");
@@ -57,15 +57,17 @@ export default function App() {
         </div>
       )}
 
-      {tab === "play" && isConnected && activeGameId === null && <Lobby onEnterGame={setActiveGameId} />}
+      {tab === "play" && isConnected && activeGame === null && (
+        <Lobby onEnterGame={(id, wagerAmount) => setActiveGame({ id, wagerAmount: wagerAmount ?? null })} />
+      )}
 
-      {tab === "play" && isConnected && activeGameId !== null && (
+      {tab === "play" && isConnected && activeGame !== null && (
         <div className="game-view">
-          <button className="btn-ghost" style={{ marginBottom: "1rem" }} onClick={() => setActiveGameId(null)}>
+          <button className="btn-ghost" style={{ marginBottom: "1rem" }} onClick={() => setActiveGame(null)}>
             ← Back to lobby
           </button>
-          <Board gameId={activeGameId} />
-          <GameStatus gameId={activeGameId} />
+          <Board gameId={activeGame.id} />
+          <GameStatus gameId={activeGame.id} wagerAmount={activeGame.wagerAmount} />
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, useWriteContract } from "wagmi";
 import { keccak256, encodePacked, toHex } from "viem";
-import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCore";
+import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCoreV2";
 
 // Secrets live in localStorage keyed by game+address so a page refresh
 // between commit and reveal doesn't lose the value you need to reveal.

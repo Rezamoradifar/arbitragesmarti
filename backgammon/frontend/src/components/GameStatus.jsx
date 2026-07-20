@@ -1,10 +1,11 @@
 import { useAccount, useChainId, useReadContract } from "wagmi";
-import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, GAME_PHASE } from "../contracts/backgammonCore";
+import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, GAME_PHASE } from "../contracts/backgammonCoreV2";
 import DiceRoll from "./DiceRoll";
 import MovePanel from "./MovePanel";
 import Timer from "./Timer";
+import DoublingCube from "./DoublingCube";
 
-export default function GameStatus({ gameId }) {
+export default function GameStatus({ gameId, wagerAmount }) {
   const { address } = useAccount();
   const chainId = useChainId();
   const contractAddress = BACKGAMMON_CORE_ADDRESS[chainId];
@@ -50,9 +51,18 @@ export default function GameStatus({ gameId }) {
 
       <Timer gameId={gameId} phase={phase} />
 
+      <DoublingCube
+        gameId={gameId}
+        phase={phase}
+        playerA={playerA}
+        playerB={playerB}
+        turn={turn}
+        wagerAmount={wagerAmount}
+      />
+
       {phase === "CommitRoll" || phase === "RevealRoll" ? (
         <DiceRoll gameId={gameId} phase={phase} />
-      ) : phase === "Move" ? (
+      ) : phase === "DoubleOffered" ? null : phase === "Move" ? (
         <MovePanel gameId={gameId} isMyTurn={isMyTurn} />
       ) : phase === "Finished" ? (
         <div className="panel" style={{ padding: "1.5rem", textAlign: "center" }}>
