@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, useWriteContract } from "wagmi";
 import { keccak256, encodePacked, toHex } from "viem";
 import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCore";
@@ -22,10 +22,30 @@ export default function DiceRoll({ gameId, phase }) {
   const { writeContractAsync, isPending } = useWriteContract();
   const [hasCommitted, setHasCommitted] = useState(false);
   const [error, setError] = useState(null);
+  const [autoRevealing, setAutoRevealing] = useState(false);
+  const autoRevealTried = useRef(false);
 
   useEffect(() => {
     setHasCommitted(!!localStorage.getItem(secretKey(gameId, address)));
   }, [gameId, address, phase]);
+
+  // The contract only enters RevealRoll once BOTH players have committed,
+  // so the moment this phase is reached it's always safe to reveal --
+  // don't make the player click a second button for something that's
+  // already guaranteed to succeed (or fail the same way a manual click would).
+  useEffect(() => {
+    autoRevealTried.current = false;
+  }, [gameId, phase]);
+
+  useEffect(() => {
+    if (phase !== "RevealRoll") return;
+    if (autoRevealTried.current) return;
+    if (!localStorage.getItem(secretKey(gameId, address))) return;
+    autoRevealTried.current = true;
+    setAutoRevealing(true);
+    handleReveal().finally(() => setAutoRevealing(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, gameId, address]);
 
   async function handleCommit() {
     setError(null);
@@ -88,15 +108,21 @@ export default function DiceRoll({ gameId, phase }) {
   }
 
   if (phase === "RevealRoll") {
+    const alreadyRevealed = !localStorage.getItem(secretKey(gameId, address));
     return (
       <div className="panel" style={{ padding: "1.5rem", textAlign: "center" }}>
         <div className="eyebrow">Reveal your roll</div>
         <p style={{ color: "var(--ivory-dim)", maxWidth: 380, margin: "0.6rem auto 1.2rem" }}>
-          Both players have committed. Reveal your secret to combine the dice.
+          Both players have committed — reveals happen automatically to
+          combine the dice.
         </p>
-        <button className="btn-primary" disabled={isPending} onClick={handleReveal}>
-          {isPending ? "Confirm in wallet…" : "Reveal Roll"}
-        </button>
+        {alreadyRevealed && !error ? (
+          <p style={{ color: "var(--ivory-dim)" }}>Revealed — waiting for opponent…</p>
+        ) : (
+          <button className="btn-primary" disabled={isPending} onClick={handleReveal}>
+            {isPending || autoRevealing ? "Confirm in wallet…" : error ? "Retry reveal" : "Revealing…"}
+          </button>
+        )}
         {error && <p style={{ color: "var(--oxblood-bright)", marginTop: "0.8rem" }}>{error}</p>}
       </div>
     );
