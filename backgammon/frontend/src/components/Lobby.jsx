@@ -5,10 +5,12 @@ import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, BACKGAMMON_CORE_DEPLOY_BL
 import { getLogsSafe } from "../contracts/getLogsSafe";
 import Spinner from "./Spinner";
 
-// BackgammonCore has not had a professional Solidity audit yet (see
-// backgammon/README.md). Keep real-money wagering off on mainnet until
-// that's done -- testnet wagering is fine since tBNB has no value.
-const MAINNET_WAGERING_ENABLED = false;
+// BackgammonCoreV2 has not had a professional Solidity audit (see
+// backgammon/README.md). Enabled on mainnet at the operator's explicit
+// request and acknowledged risk -- real BNB wagers are settled by
+// unaudited contract code. Keep the in-app risk notice below in sync
+// with this flag.
+const MAINNET_WAGERING_ENABLED = true;
 
 function short(addr) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -140,6 +142,14 @@ export default function Lobby({ onEnterGame }) {
               Real-money wagering is disabled on mainnet until BackgammonCore
               has a professional audit. Switch to BSC Testnet to try wagered
               games with tBNB.
+            </p>
+          )}
+
+          {wagerAllowed && mode === "wager" && chainId === 56 && (
+            <p style={{ color: "var(--oxblood-bright)", fontSize: "0.78rem", marginBottom: "1rem" }}>
+              ⚠ BackgammonCoreV2 has not had a professional security audit.
+              You're wagering real BNB against unaudited contract code —
+              play at your own risk.
             </p>
           )}
 
