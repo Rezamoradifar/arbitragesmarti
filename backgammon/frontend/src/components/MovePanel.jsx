@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useChainId, useReadContract, useWriteContract } from "wagmi";
-import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCore";
+import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCoreV2";
 
 function pointLabel(v) {
   if (v === "24" || v === 24) return "Bar/Off";

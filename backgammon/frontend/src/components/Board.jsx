@@ -1,5 +1,5 @@
 import { useReadContract } from "wagmi";
-import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCore";
+import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI } from "../contracts/backgammonCoreV2";
 import { useChainId } from "wagmi";
 
 const W = 760;

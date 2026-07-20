@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAccount, useChainId, usePublicClient, useWriteContract } from "wagmi";
 import { formatEther, parseEther, parseEventLogs } from "viem";
-import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, BACKGAMMON_CORE_DEPLOY_BLOCK } from "../contracts/backgammonCore";
+import { BACKGAMMON_CORE_ADDRESS, BACKGAMMON_CORE_ABI, BACKGAMMON_CORE_DEPLOY_BLOCK } from "../contracts/backgammonCoreV2";
 import { getLogsSafe } from "../contracts/getLogsSafe";
 import Spinner from "./Spinner";
 
@@ -85,13 +85,13 @@ export default function Lobby({ onEnterGame }) {
         logs: receipt.logs,
       });
       if (!event) throw new Error("Game was created but the confirmation event wasn't found");
-      onEnterGame?.(event.args.gameId);
+      onEnterGame?.(event.args.gameId, wagerAmount);
     } catch (e) {
       setError(e.shortMessage || e.message || "Failed to create table");
     }
   }
 
-  async function joinById(id) {
+  async function joinById(id, wagerAmount) {
     setError(null);
     try {
       await writeContractAsync({
@@ -100,7 +100,7 @@ export default function Lobby({ onEnterGame }) {
         functionName: "joinGame",
         args: [id],
       });
-      onEnterGame?.(id);
+      onEnterGame?.(id, wagerAmount);
     } catch (e) {
       setError(e.shortMessage || e.message || "Failed to join table");
     }
@@ -231,7 +231,7 @@ export default function Lobby({ onEnterGame }) {
               {me?.toLowerCase() === t.creator.toLowerCase() ? (
                 <span className="mono" style={{ fontSize: "0.8rem", color: "var(--ivory-dim)" }}>Your table</span>
               ) : (
-                <button className="btn-ghost" disabled={isPending} onClick={() => joinById(t.gameId)}>
+                <button className="btn-ghost" disabled={isPending} onClick={() => joinById(t.gameId, t.wager)}>
                   Join
                 </button>
               )}
