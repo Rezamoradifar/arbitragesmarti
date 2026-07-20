@@ -171,10 +171,21 @@ button:hover { transform: translateY(-1px); }
   .app-container { padding: 1rem 0.75rem; }
   .app-header { gap: 0.6rem; }
   .app-header h1 { font-size: 1.25rem; }
-  .status-row, .lobby-grid {
+  .lobby-grid {
     grid-template-columns: 1fr !important;
     flex-direction: column !important;
   }
+  /* Keep phase/turn/table as one compact row instead of three stacked
+     full-height cards -- stacking pushed the dice/move panel below the
+     fold and forced extra scrolling to reach the actual controls. */
+  .status-row {
+    gap: 0.5rem !important;
+    margin: 1rem 0 !important;
+  }
+  .status-row .panel { padding: 0.55rem 0.6rem !important; }
+  .status-row .eyebrow { font-size: 0.62rem !important; }
+  .status-row > div > div:last-child { font-size: 0.92rem !important; }
+  .panel { padding: 1rem !important; }
 }
 
 /* Phones, landscape: board needs width, header can shrink further */
