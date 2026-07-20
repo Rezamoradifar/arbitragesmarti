@@ -1,15 +1,20 @@
+import { DiceIcon, TrophyIcon, ChartIcon } from "./icons";
+
 const FEATURES = [
   {
     title: "Casual & wagered tables",
     body: "Play for free, or stake BNB on a table — the pot settles automatically on-chain the moment a game finishes.",
+    Icon: DiceIcon,
   },
   {
     title: "Tournaments",
     body: "Enter a prize pool, compete, and claim your share directly from the contract once standings are finalized.",
+    Icon: TrophyIcon,
   },
   {
     title: "On-chain ratings",
     body: "Every finished game updates a public ELO-style rating — no centralized database, no hidden leaderboard.",
+    Icon: ChartIcon,
   },
 ];
 
@@ -36,7 +41,10 @@ export default function Landing({ isConnected, onPlay }) {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem" }}>
         {FEATURES.map((f) => (
-          <div key={f.title} className="panel" style={{ padding: "1.4rem" }}>
+          <div key={f.title} className="panel panel-interactive" style={{ padding: "1.4rem" }}>
+            <span className="feature-icon">
+              <f.Icon width={19} height={19} />
+            </span>
             <h3 style={{ fontSize: "1.05rem", marginBottom: "0.5rem" }}>{f.title}</h3>
             <p style={{ color: "var(--ivory-dim)", margin: 0, fontSize: "0.9rem", lineHeight: 1.55 }}>{f.body}</p>
           </div>

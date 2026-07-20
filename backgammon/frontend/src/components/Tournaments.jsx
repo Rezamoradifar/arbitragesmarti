@@ -3,6 +3,7 @@ import { useAccount, useChainId, usePublicClient, useWriteContract } from "wagmi
 import { parseEther, formatEther } from "viem";
 import { TOURNAMENT_ADDRESS, TOURNAMENT_ABI, TOURNAMENT_DEPLOY_BLOCK } from "../contracts/backgammonTournament";
 import { getLogsSafe } from "../contracts/getLogsSafe";
+import Spinner from "./Spinner";
 
 function short(addr) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -20,6 +21,7 @@ export default function Tournaments() {
   const [showCreate, setShowCreate] = useState(false);
   const [entryFee, setEntryFee] = useState("0.01");
   const [maxPlayers, setMaxPlayers] = useState("8");
+  const [actionError, setActionError] = useState(null);
 
   const contractAddress = TOURNAMENT_ADDRESS[chainId];
 
@@ -77,40 +79,55 @@ export default function Tournaments() {
   }, [chainId, publicClient, me]);
 
   async function handleCreate() {
-    await writeContractAsync({
-      address: contractAddress,
-      abi: TOURNAMENT_ABI,
-      functionName: "createTournament",
-      args: [
-        "0x0000000000000000000000000000000000000000",
-        parseEther(entryFee),
-        BigInt(maxPlayers),
-        [6000, 3000, 1000], // 60/30/10 payout split across 1st/2nd/3rd
-      ],
-    });
-    setShowCreate(false);
-    load();
+    setActionError(null);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: TOURNAMENT_ABI,
+        functionName: "createTournament",
+        args: [
+          "0x0000000000000000000000000000000000000000",
+          parseEther(entryFee),
+          BigInt(maxPlayers),
+          [6000, 3000, 1000], // 60/30/10 payout split across 1st/2nd/3rd
+        ],
+      });
+      setShowCreate(false);
+      load();
+    } catch (e) {
+      setActionError(e.shortMessage || e.message || "Failed to create tournament");
+    }
   }
 
   async function handleRegister(t) {
-    await writeContractAsync({
-      address: contractAddress,
-      abi: TOURNAMENT_ABI,
-      functionName: "register",
-      args: [t.id],
-      value: t.entryFee,
-    });
-    load();
+    setActionError(null);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: TOURNAMENT_ABI,
+        functionName: "register",
+        args: [t.id],
+        value: t.entryFee,
+      });
+      load();
+    } catch (e) {
+      setActionError(e.shortMessage || e.message || "Failed to register");
+    }
   }
 
   async function handleClaim(t) {
-    await writeContractAsync({
-      address: contractAddress,
-      abi: TOURNAMENT_ABI,
-      functionName: "claimPrize",
-      args: [t.id],
-    });
-    load();
+    setActionError(null);
+    try {
+      await writeContractAsync({
+        address: contractAddress,
+        abi: TOURNAMENT_ABI,
+        functionName: "claimPrize",
+        args: [t.id],
+      });
+      load();
+    } catch (e) {
+      setActionError(e.shortMessage || e.message || "Failed to claim prize");
+    }
   }
 
   return (
@@ -162,14 +179,15 @@ export default function Tournaments() {
         </p>
       )}
       {error && <p style={{ color: "var(--oxblood-bright)" }}>{error}</p>}
-      {!error && tournaments === null && <p style={{ color: "var(--ivory-dim)" }}>Loading tournaments…</p>}
+      {actionError && <p style={{ color: "var(--oxblood-bright)" }}>{actionError}</p>}
+      {!error && tournaments === null && <Spinner label="Loading tournaments…" />}
       {!error && tournaments && tournaments.length === 0 && (
         <p style={{ color: "var(--ivory-dim)" }}>No tournaments yet on this network. Be the first to create one.</p>
       )}
 
       <div style={{ display: "grid", gap: "0.8rem" }}>
         {tournaments?.map((t) => (
-          <div key={t.id.toString()} className="panel" style={{ padding: "1rem 1.2rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.6rem" }}>
+          <div key={t.id.toString()} className="panel panel-interactive" style={{ padding: "1rem 1.2rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.6rem" }}>
             <div>
               <div className="mono" style={{ fontSize: "0.9rem" }}>Tournament #{t.id.toString()}</div>
               <div style={{ color: "var(--ivory-dim)", fontSize: "0.82rem" }}>

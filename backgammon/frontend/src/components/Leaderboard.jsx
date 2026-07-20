@@ -7,6 +7,7 @@ import {
   DEFAULT_RATING,
 } from "../contracts/ratingRegistry";
 import { getLogsSafe } from "../contracts/getLogsSafe";
+import Spinner from "./Spinner";
 
 function short(addr) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -80,7 +81,7 @@ export default function Leaderboard() {
         </p>
       )}
       {error && <p style={{ color: "var(--oxblood-bright)" }}>{error}</p>}
-      {!error && rows === null && <p style={{ color: "var(--ivory-dim)" }}>Loading on-chain ratings…</p>}
+      {!error && rows === null && <Spinner label="Loading on-chain ratings…" />}
       {!error && rows && rows.length === 0 && (
         <p style={{ color: "var(--ivory-dim)" }}>
           No rated games finished yet on this network. Ratings start at {DEFAULT_RATING} after your first game.
@@ -99,7 +100,10 @@ export default function Leaderboard() {
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.player} style={{ borderTop: "1px solid var(--line)" }}>
+              <tr key={r.player} style={{ borderTop: "1px solid var(--line)", transition: "background 120ms ease" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(176,141,87,0.06)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
                 <td style={{ padding: "0.5rem 0.4rem" }}>{i + 1}</td>
                 <td style={{ padding: "0.5rem 0.4rem" }}>{short(r.player)}</td>
                 <td style={{ padding: "0.5rem 0.4rem", color: "var(--brass-bright)" }}>{r.rating}</td>
