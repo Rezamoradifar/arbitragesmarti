@@ -1,0 +1,18 @@
+{
+  "network": "bscTestnet",
+  "chainId": 97,
+  "deployedAt": "2026-07-20",
+  "platformOwner": "0x63c5B98AEfd69658B652d5F35FFda3C6c06847E3",
+  "contracts": {
+    "BackgammonCoreV2": "0xB877F39A0B5380636039413230C51703C7AC0DF9"
+  },
+  "reusedFromV1": {
+    "ReferralRegistry": "0xE78cf59B7C015985992550B5a8Cb67940a0bEB11",
+    "RatingRegistry": "0xF07fe39C8532e3b714cfDFFCee28bcC9603F7092"
+  },
+  "verified": true,
+  "bscscanLinks": {
+    "BackgammonCoreV2": "https://testnet.bscscan.com/address/0xB877F39A0B5380636039413230C51703C7AC0DF9#code"
+  },
+  "notes": "New: doubling cube (offerDouble/acceptDouble/declineDouble, MAX_CUBE_VALUE=8) and owner-only emergency pause() (blocks new games/joins/doubles/rolls/moves; never blocks resign/claimTimeout so active games can't be trapped). V1 BackgammonCore is untouched and still live for any games already in progress there -- this is a separate contract, not an upgrade. referralRegistry.setAuthorizedCaller and ratingRegistry.setReporter for this new address still need to be called by the PLATFORM_OWNER wallet (the deployer key no longer owns those registries) -- until then referral/rating hooks fail safe (no-op / fallback to treasury), core gameplay and payouts are unaffected. NOT audited: mainnet deployment needs explicit go-ahead."
+}

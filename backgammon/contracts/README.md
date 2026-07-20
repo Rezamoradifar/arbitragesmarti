@@ -7,9 +7,10 @@ what can live on-chain and what must stay off-chain.
 
 | Contract | Purpose |
 |---|---|
-| `BackgammonCore.sol` | Board state, commit-reveal dice, move validation, hitting, bearing off, wager escrow + payout, timeouts/resignation |
+| `BackgammonCore.sol` | **V1.** Board state, commit-reveal dice, move validation, hitting, bearing off, wager escrow + payout, timeouts/resignation. Live on testnet + mainnet, immutable -- kept as-is for any games already in progress there. |
+| `BackgammonCoreV2.sol` | **V2**, a separate contract (not an upgrade): everything V1 has, plus a doubling cube (`offerDouble`/`acceptDouble`/`declineDouble`, capped at 8x) and an owner-only emergency `pause()` that blocks new games/joins/doubles/rolls/moves but never `resign`/`claimTimeout`, so an active game's funds can never get trapped. See the contract's doc comment for how the doubling cube's escrow top-ups work in a trustless (no-IOUs) setting. |
 | `BackgammonTournament.sol` | Entry fees, prize pool escrow, organizer-finalized standings, on-chain prize claims |
-| `RatingRegistry.sol` | On-chain ELO-style rating, updated by `BackgammonCore` after each finished game |
+| `RatingRegistry.sol` | On-chain ELO-style rating, updated by `BackgammonCore`/`BackgammonCoreV2` after each finished game |
 | `ReferralRegistry.sol` | Multi-level referral commissions, paid out instantly in the same transaction a wagered game finishes |
 
 ## Revenue model (wagered games only — free play is never fee'd)
@@ -80,7 +81,8 @@ Dependencies: OpenZeppelin Contracts (`IERC20`, `ReentrancyGuard`, `Ownable`).
 
 ## Known simplifications / Phase 2 TODOs
 
-- No doubling cube yet (`BackgammonCore` plays fixed-stake games only).
+- No doubling cube in V1 (`BackgammonCore` plays fixed-stake games only) --
+  see `BackgammonCoreV2.sol` for the doubling cube + emergency pause version.
 - Move legality checks distance/occupancy but does not yet enforce
   "must play the maximum number of legal dice" edge case some rule sets
   require — add before any real-money mainnet deployment.
